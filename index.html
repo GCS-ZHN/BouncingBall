@@ -1,0 +1,48 @@
+<head>
+    <title>Float Ball</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+    <form>
+        <button id = "bg" type="button">Begin</button>
+        <button id = "ca" type="button">Cancel</button>
+		<button id = "ct" type="button">Continue</button>
+    </form>
+    <main>
+        <canvas id = "gameboard"></canvas>
+    </main>
+    <!--ES 6 js内置模块化-->
+    <!--script src="module/dist/index.js" type="module"></script-->
+    <script type="module">
+        import { Game } from "./module/dist/Game.js";
+        const bgbutton = document.getElementById("bg");
+        const cabutton = document.getElementById("ca");
+		const ctbutton = document.getElementById("ct");
+        const canvas = document.getElementById("gameboard");
+		var process;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext("2d");
+        let id = 0;
+        cabutton.onclick = () => {
+            window.cancelAnimationFrame(id);
+            //ctx.clearRect(0, 0, canvas.width, canvas.height);
+        };
+        bgbutton.onclick = ()=> {
+            if (id != 0) window.cancelAnimationFrame(id);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const Game1 = new Game(300, ctx, 20, 10, 100, 100, 1, 1, false);
+            process = function(now) {
+                Game1.update(now);
+                id = window.requestAnimationFrame(process);
+            };
+			process(new Date().getDate());
+        };
+		ctbutton.onclick = ()=>{
+			id = window.requestAnimationFrame(process);
+		};
+    </script>
+    <!--基于AMD规范的使用require.js的ES5模块化-->
+    <!--script data-main="index" src="require.js"></script-->
+</body>
